@@ -11,3 +11,11 @@ Responsive UI with a simple task list.
 ✅ Keeps the logic clean by handling the event through the form.
 
 ✅ Uses the name attribute in the <input> field to retrieve form data.
+
+✅ Form validation: Prevents empty or too-short task names.
+
+✅ Error handling: Shows messages for failed operations.
+
+✅ Auto-clears errors on successful submission.
+
+This makes the app more user-friendly and prevents bad data from being submitted
