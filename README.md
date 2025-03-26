@@ -18,4 +18,12 @@ Responsive UI with a simple task list.
 
 ✅ Auto-clears errors on successful submission.
 
+✅ Edit Feature: Users can click "Edit", modify the text, and save changes.
+
+✅ Inline Input for Editing: Tasks are edited in place without navigating to another page.
+
+✅ Cancel Editing: Users can discard changes by clicking "Cancel".
+
+✅ Error Handling: Catches API failures and displays appropriate messages.
+
 This makes the app more user-friendly and prevents bad data from being submitted
