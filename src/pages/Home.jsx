@@ -9,12 +9,17 @@ const Home = () => {
   useEffect(() => {
     axios.get(`${API_URL}/todos`).then((res) => setTodos(res.data));
   }, []);
-
-  const addTodo = async () => {
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const text = formData.get("text").trim();
+    
     if (text.trim()) {
       const res = await axios.post(`${API_URL}/todos`, { text });
       setTodos([...todos, res.data]);
-      setText("");
+      e.target.reset(); // Reset the form after submission
     }
   };
 
@@ -30,15 +35,17 @@ const Home = () => {
 
   return (
     <div className="max-w-md mx-auto bg-white p-5 rounded-lg shadow-md">
-      <div className="flex gap-2 mb-4">
+      <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
         <input
+          name="text"
           className="border p-2 w-full rounded"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
           placeholder="Add a task..."
         />
-        <button onClick={addTodo} className="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
-      </div>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          Add
+        </button>
+      </form>
+
       <ul>
         {todos.map(todo => (
           <li key={todo.id} className="flex justify-between items-center p-2 border-b">
