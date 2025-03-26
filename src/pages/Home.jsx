@@ -4,7 +4,6 @@ import axios from "axios";
 const Home = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const [todos, setTodos] = useState([]);
-  const [text, setText] = useState("");
 
   useEffect(() => {
     axios.get(`${API_URL}/todos`).then((res) => setTodos(res.data));
@@ -16,7 +15,7 @@ const Home = () => {
     const formData = new FormData(e.target);
     const text = formData.get("text").trim();
     
-    if (text.trim()) {
+    if (text) {
       const res = await axios.post(`${API_URL}/todos`, { text });
       setTodos([...todos, res.data]);
       e.target.reset(); // Reset the form after submission
