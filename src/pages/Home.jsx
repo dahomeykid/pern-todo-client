@@ -4,9 +4,13 @@ import axios from "axios";
 const Home = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const [todos, setTodos] = useState([]);
+  const [error, setError] = useState("");
+
 
   useEffect(() => {
-    axios.get(`${API_URL}/todos`).then((res) => setTodos(res.data));
+    axios.get(`${API_URL}/todos`)
+    .then((res) => setTodos(res.data))
+    .catch(() => setError("Failed to load tasks."));
   }, []);
   
   const handleSubmit = async (e) => {
@@ -15,21 +19,37 @@ const Home = () => {
     const formData = new FormData(e.target);
     const text = formData.get("text").trim();
     
-    if (text) {
-      const res = await axios.post(`${API_URL}/todos`, { text });
+    if (!text || text.length < 3) {
+      setError("Task must be at least 3 characters long.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/todos", { text });
       setTodos([...todos, res.data]);
-      e.target.reset(); // Reset the form after submission
+      e.target.reset(); // Reset form
+      setError(""); // Clear errors after success
+    } catch {
+      setError("Failed to add task.");
     }
   };
 
   const toggleComplete = async (id, completed) => {
-    await axios.put(`${API_URL}/todos/${id}`, { completed: !completed });
-    setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !completed } : todo)));
+    try {
+      await axios.put(`${API_URL}/todos/${id}`, { completed: !completed });
+      setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !completed } : todo)));
+    } catch {
+      setError("Failed to update task.");
+    }
   };
 
   const deleteTodo = async (id) => {
+    try {
     await axios.delete(`${API_URL}/todos/${id}`);
     setTodos(todos.filter(todo => todo.id !== id));
+    } catch {
+      setError("Failed to delete task.");
+    }
   };
 
   return (
@@ -44,6 +64,8 @@ const Home = () => {
           Add
         </button>
       </form>
+
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <ul>
         {todos.map(todo => (
